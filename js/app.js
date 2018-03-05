@@ -27,18 +27,32 @@ Enemy.prototype.render = function() {
 var Player = function() {
 
   this.sprite = 'images/char-boy.png';
+  this.x = 200;
+  this.y = 300;
 };
 
-Player.prototype.update = function(dt) {
-
+Player.prototype.update = function() {
+  ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 Player.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-Player.prototype.handleInput = function() {
+Player.prototype.handleInput = function(direction) {
+  if (direction === 'up') {
+    this.y -= 80;
 
+  } else if (direction === 'down') {
+    this.y += 80;
+
+  } else if (direction === 'left') {
+    this.x -= 100;
+
+  } else if (direction === 'right') {
+    this.x += 100;
+
+  }
 };
 
 // Now instantiate your objects.
@@ -59,5 +73,4 @@ document.addEventListener('keyup', function(e) {
   };
 
   player.handleInput(allowedKeys[e.keyCode]);
-  alert(allowedKeys[e.keyCode]);
 });
