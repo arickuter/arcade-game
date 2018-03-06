@@ -8,6 +8,22 @@ var Enemy = function() {
   this.sprite = 'images/enemy-bug.png';
 };
 
+var score;
+var deaths;
+
+$('#reset').on('click', function() {
+  reset();
+});
+
+function reset() {
+  score = 0;
+  deaths = 0;
+  player.x = 200;
+  player.y = 300;
+  void(document.getElementById('deaths').innerHTML = 'DEATHS: ' + deaths);
+  void(document.getElementById('score').innerHTML = 'SCORE: ' + score);
+}
+
 var allEnemies = [];
 for (i = 0; i < 6; i++) {
   allEnemies.push(new Enemy());
@@ -31,6 +47,8 @@ function checkCollision() {
       player.x = 200;
       player.y = 300;
       alert('You died!');
+      deaths += 1;
+      void(document.getElementById('deaths').innerHTML = 'DEATHS: ' + deaths);
       break;
     }
   }
@@ -76,6 +94,8 @@ var Player = function() {
   this.y = 300;
   this.width = 65;
   this.height = 76;
+  score = 0;
+  deaths = 0;
 };
 
 Player.prototype.update = function() {
@@ -83,8 +103,11 @@ Player.prototype.update = function() {
   if (this.y === -20) {
     setTimeout(function() {
       alert('You win!');
-      location.reload();
-    }, 50);
+      score += 1;
+      void(document.getElementById('score').innerHTML = 'SCORE: ' + score);
+      player.x = 200;
+      player.y = 300;
+    }, 10);
   }
 };
 

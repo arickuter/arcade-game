@@ -1,3 +1,29 @@
 body {
   text-align: center;
 }
+
+* {
+  padding: 0;
+  margin: auto;
+  font-family: helvetica;
+}
+
+h1 {
+  margin-bottom: -30px;
+  margin-top: 30px;
+}
+
+h2 {
+  margin-top: -20px;
+  vertical-align: top;
+  display: inline-block;
+}
+
+#deaths {
+  margin-left: 50px;
+}
+
+#reset {
+  width: 100px;
+  height: 25px;
+}
