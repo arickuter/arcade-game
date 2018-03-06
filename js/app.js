@@ -7,14 +7,16 @@ var Enemy = function() {
   // a helper we've provided to easily load images
   this.sprite = 'images/enemy-bug.png';
 };
-
+// Variable declaration
 var score;
 var deaths;
 
+// Calls the reset function
 $('#reset').on('click', function() {
   reset();
 });
 
+// Resets the game
 function reset() {
   score = 0;
   deaths = 0;
@@ -24,6 +26,8 @@ function reset() {
   void(document.getElementById('score').innerHTML = 'SCORE: ' + score);
 }
 
+// Creates array allEnemies and initializes it
+// Then adds all the enemy objects to the array with coordinates as well as speed
 var allEnemies = [];
 for (i = 0; i < 6; i++) {
   allEnemies.push(new Enemy());
@@ -40,6 +44,7 @@ for (i = 0; i < 6; i++) {
   }
 }
 
+// Checks if the player and the enemy have collided
 function checkCollision() {
   for (i = 0; i < 6; i++) {
     if (player.x < allEnemies[i].x + allEnemies[i].width && player.x + player.width > allEnemies[i].x &&
@@ -63,12 +68,15 @@ Enemy.prototype.update = function(dt) {
 
   checkCollision();
 
+  // Checks if the enemy has gone out the board area, if so, enemy is placed
+  // at the beginning
   for (i = 0; i < 6; i++) {
     if (allEnemies[i].x > 500) {
       allEnemies[i].x = -100;
     }
   }
 
+  // Moves the enemies across the board
   var enemyNum = Math.floor(Math.random() * 6);
   var enemyObj = allEnemies[enemyNum];
   if (enemyObj.x > -100) {
@@ -98,6 +106,7 @@ var Player = function() {
   deaths = 0;
 };
 
+// Update function for player
 Player.prototype.update = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   if (this.y === -20) {
@@ -111,10 +120,12 @@ Player.prototype.update = function() {
   }
 };
 
+// Renders the player on the screen
 Player.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+// Handles the input for the player and moves the player accordingly
 Player.prototype.handleInput = function(direction) {
   if (direction === 'up' && this.y !== -20) {
     this.y -= 80;
@@ -130,10 +141,6 @@ Player.prototype.handleInput = function(direction) {
 
   }
 };
-
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
 
 var player = new Player();
 
