@@ -1,5 +1,7 @@
 Frogger arcade game
 ===============================
+## How to Run
+### Download the project and open index.html in any browser to run the game.
 
 ## Movement
 ### To move the player use the up, down, left and right arrow keys

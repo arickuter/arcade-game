@@ -20,8 +20,8 @@ $('#reset').on('click', function() {
 function reset() {
   score = 0;
   deaths = 0;
-  player.x = 200;
-  player.y = 300;
+  this.x = 200;
+  this.y = 300;
   void(document.getElementById('deaths').innerHTML = 'DEATHS: ' + deaths);
   void(document.getElementById('score').innerHTML = 'SCORE: ' + score);
 }
@@ -46,17 +46,7 @@ for (i = 0; i < 6; i++) {
 
 // Checks if the player and the enemy have collided
 function checkCollision() {
-  for (i = 0; i < 6; i++) {
-    if (player.x < allEnemies[i].x + allEnemies[i].width && player.x + player.width > allEnemies[i].x &&
-      player.y < allEnemies[i].y + allEnemies[i].height && player.y + player.height > allEnemies[i].y) {
-      player.x = 200;
-      player.y = 300;
-      alert('You died!');
-      deaths += 1;
-      void(document.getElementById('deaths').innerHTML = 'DEATHS: ' + deaths);
-      break;
-    }
-  }
+
 }
 
 // Update the enemy's position, required method for game
@@ -65,8 +55,6 @@ Enemy.prototype.update = function(dt) {
   // You should multiply any movement by the dt parameter
   // which will ensure the game runs at the same speed for
   // all computers.
-
-  checkCollision();
 
   // Checks if the enemy has gone out the board area, if so, enemy is placed
   // at the beginning
@@ -106,16 +94,31 @@ var Player = function() {
   deaths = 0;
 };
 
+Player.prototype.checkCollision = function() {
+  for (i = 0; i < 6; i++) {
+    if (player.x < allEnemies[i].x + allEnemies[i].width && player.x + player.width > allEnemies[i].x &&
+      player.y < allEnemies[i].y + allEnemies[i].height && player.y + player.height > allEnemies[i].y) {
+      player.x = 200;
+      player.y = 300;
+      alert('You died!');
+      deaths += 1;
+      void(document.getElementById('deaths').innerHTML = 'DEATHS: ' + deaths);
+      break;
+    }
+  }
+};
+
 // Update function for player
 Player.prototype.update = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  this.checkCollision();
   if (this.y === -20) {
     setTimeout(function() {
       alert('You win!');
       score += 1;
       void(document.getElementById('score').innerHTML = 'SCORE: ' + score);
-      player.x = 200;
-      player.y = 300;
+      this.x = 200;
+      this.y = 300;
     }, 10);
   }
 };
