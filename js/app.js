@@ -7,9 +7,6 @@ var Enemy = function() {
   // a helper we've provided to easily load images
   this.sprite = 'images/enemy-bug.png';
 };
-// Variable declaration
-var score;
-var deaths;
 
 // Calls the reset function
 $('#reset').on('click', function() {
@@ -18,11 +15,11 @@ $('#reset').on('click', function() {
 
 // Resets the game
 function reset() {
-  score = 0;
-  deaths = 0;
-  this.startPos();
-  void(document.getElementById('deaths').innerHTML = 'DEATHS: ' + deaths);
-  void(document.getElementById('score').innerHTML = 'SCORE: ' + score);
+  player.score = 0;
+  player.deaths = 0;
+  player.startPos();
+  void(document.getElementById('deaths').innerHTML = 'DEATHS: ' + player.deaths);
+  void(document.getElementById('score').innerHTML = 'SCORE: ' + player.score);
 }
 
 // Creates array allEnemies and initializes it
@@ -33,7 +30,7 @@ for (i = 0; i < 6; i++) {
   allEnemies[i].x = -100;
   allEnemies[i].width = 70;
   allEnemies[i].height = 65;
-  allEnemies[i].speed = ((Math.random() * 300) + 100);
+  allEnemies[i].speed = ((Math.random() * 350) + 150);
   if (allEnemies.length < 3) {
     allEnemies[i].y = 60;
   } else if (allEnemies.length > 2 && allEnemies.length < 5) {
@@ -41,11 +38,6 @@ for (i = 0; i < 6; i++) {
   } else {
     allEnemies[i].y = 230;
   }
-}
-
-// Checks if the player and the enemy have collided
-function checkCollision() {
-
 }
 
 // Update the enemy's position, required method for game
@@ -57,21 +49,16 @@ Enemy.prototype.update = function(dt) {
 
   // Checks if the enemy has gone out the board area, if so, enemy is placed
   // at the beginning
-  for (i = 0; i < 6; i++) {
-    if (allEnemies[i].x > 500) {
-      allEnemies[i].x = -100;
-    }
+  if (this.x > 500) {
+    this.x = -100;
+    this.speed = ((Math.random() * 350) + 150);
   }
 
   // Moves the enemies across the board
-  var enemyNum = Math.floor(Math.random() * 6);
-  var enemyObj = allEnemies[enemyNum];
-  if (enemyObj.x > -100) {
-    enemyObj.x += enemyObj.speed * dt;
+  if (this.x > -100) {
+    this.x += this.speed * dt;
   } else {
-    setTimeout(function() {
-      enemyObj.x += 1;
-    }, Math.random() * 100000);
+    this.x += 1;
   }
 };
 
@@ -88,19 +75,18 @@ var Player = function() {
   this.startPos();
   this.width = 65;
   this.height = 76;
-  score = 0;
-  deaths = 0;
+  this.score = 0;
+  this.deaths = 0;
 };
 
 Player.prototype.checkCollision = function() {
-  for (i = 0; i < 6; i++) {
+  for (i = 0; i < allEnemies.length; i++) {
     if (this.x < allEnemies[i].x + allEnemies[i].width && this.x + this.width > allEnemies[i].x &&
       this.y < allEnemies[i].y + allEnemies[i].height && this.y + this.height > allEnemies[i].y) {
       this.startPos();
       alert('You died!');
-      deaths += 1;
-      void(document.getElementById('deaths').innerHTML = 'DEATHS: ' + deaths);
-      break;
+      this.deaths += 1;
+      document.getElementById('deaths').innerHTML = 'DEATHS: ' + this.deaths;
     }
   }
 };
@@ -109,16 +95,14 @@ Player.prototype.checkWin = function() {
   if (this.y === -32) {
     this.startPos();
     alert('You win!');
-    score += 1;
-    void(document.getElementById('score').innerHTML = 'SCORE: ' + score);
+    this.score += 1;
+    void(document.getElementById('score').innerHTML = 'SCORE: ' + this.score);
   }
 };
 
 // Update function for player
 Player.prototype.update = function() {
-  ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   this.checkCollision();
-  this.checkWin();
 };
 
 // Renders the player on the screen
@@ -135,6 +119,7 @@ Player.prototype.startPos = function() {
 Player.prototype.handleInput = function(direction) {
   if (direction === 'up' && this.y !== -32) {
     this.y -= 83;
+    this.checkWin();
 
   } else if (direction === 'down' && this.y !== 383) {
     this.y += 83;
